@@ -49,6 +49,8 @@ booklists_db.append(first_booklist)
 
 laon_records_db = []
 one_loan_record = {'recordNumber': 101, 'bookId' : 1, 'loaner_id' : 1001, 'loan_date' : 181013, 'returnDate' : 181113}
+all_loan_records = [{'recordNumber': 101, 'bookId' : 1, 'loaner_id' : 1001, 'loan_date' : 181013, 'returnDate' : 181113},
+                    {'recordNumber': 102, 'bookId': 2, 'loaner_id': 1002, 'loan_date': 181014, 'returnDate': 181114}]
 booklists_db.append(first_booklist)
 
 @bk.route('/add-book/<string:id>')
@@ -198,10 +200,6 @@ class advanced_search(Resource):
     def get(self, search_options):
         return harry_potter, 200
 
-
-
-
-
 @loanrec.route('/loan_record', endpoint='/loan_record')
 class LoanRecord(Resource):
     @loanrec.doc(params={'recordNumber' : 'a loan record number'})
@@ -226,6 +224,45 @@ class create_loan_record(Resource):
     @loanrec.response(400, 'creation of loan record failed')
     def put(self, bookId, loanerId, loanDate):
         return one_loan_record, 200
+
+
+@loanrec.route('/check_book_availability/<int:bookId>/<int:loanDate>/<int:returnDate>')
+class remind_loaner(Resource):
+    '''Check book availability'''
+    @loanrec.doc(params={'bookId': 'the Id of the loaned book'})
+    @loanrec.doc(params={'loanDate': 'the loan date of the book'})
+    @loanrec.doc(params={'returnDate': 'the return date of the book'})
+    @loanrec.response(200, 'success')
+    @loanrec.response(400, 'checking book availability failed')
+    def get(self, bookId, loanDate, returnDate):
+        return one_loan_record, 200
+
+@loanrec.route('/remind_loaner/<int:recordNumber>')
+class remind_loaner(Resource):
+    '''Remind loaner of return'''
+    @loanrec.doc(params={'recordNumber' : 'the Id of the loaned book'})
+    @loanrec.response(200, 'success')
+    @loanrec.response(400, 'reminding loaner failed')
+    def get(self, recordNumber):
+        return one_loan_record, 200
+
+# Maybe we should merge operations of book note into update_book_note
+@bk.route('/update_book_note/<string:note>')
+class update_book_note(Resource):
+    '''update note for a book'''
+    @bk.doc(params={'note' : 'note for a book'})
+    @bk.response(200, 'success')
+    @bk.response(404, 'failed to update book note')
+    def put(self, note):
+        return harry_potter, 200
+
+@loanrec.route('/get_all_loan_records')
+class get_all_loan_records(Resource):
+    '''Get all loan records in the database'''
+    @loanrec.response(200, 'success')
+    @loanrec.response(400, 'getting all loan records failed')
+    def get(self):
+        return all_loan_records, 200
 
 
 if __name__ == '__main__':
