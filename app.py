@@ -13,42 +13,78 @@ bk = api.namespace('book', description='Book Library operations')
 book_model = api.model('Book', {
     'id': fields.Integer(readOnly=True, description='The book id'),
     'title': fields.String(required=True, description='The book title'),
-    'note': fields.String(description='Note of the book')
+    'note': fields.String(description='Note of the book'),
+    'authorId': fields.String(required=True, description='The author id of the bookd'),
+    'date' : fields.String(description='Date of book release')
 })
 
 books_db = []
-harry_potter = {'id' : 1, 'title' : 'Harry Potter', 'note' : 'very fun'}
+harry_potter = {'id' : 1, 'title' : 'Harry Potter', 'note' : 'very fun', 'authorId' : '1', 'date' : '2018-10-14'}
 books_db.append(harry_potter)
 
+query_list = []
+query_list.append(harry_potter)
 
 
-@bk.route('/book', endpoint='/book')
-class Book(Resource):
-    '''Get a book by book id'''
+@bk.route('/add-book/<string:id>')
+class add_by_id(Resource):
+    '''add a book by book id'''
     @bk.doc(params={'id' : 'a book id'})
-    @bk.response(200, 'success')
-    @bk.response(404, 'book not found')
-    def get(self, id):
-        '''get the book'''
+    @bk.response(201, 'Book successful added')
+    @bk.response(400, 'Bad request, invalid syntax')
+    @bk.response(401, 'Unauthorized')
+    @bk.response(403, 'Can not add the book')
+    def put(self, title):
+        return harry_potter, 201
+
+
+@bk.route('/remove-book/<string:id>')
+class remove_by_id(Resource):
+    '''remove a book by book id'''
+    @bk.doc(params={'id' : 'a book id'})
+    @bk.response(200, 'Book successfully removed')
+    @bk.response(400, 'Bad request, invalid syntax')
+    @bk.response(401, 'Unauthorized')
+    @bk.response(403, 'Can not remove the book')
+    def put(self, title):
         return harry_potter, 200
 
-    @bk.doc(params={'title' : 'the book object'},
-    response={201, 'create success', 400, 'Error'})
-    @bk.marshal_with(book_model)
-    def put(self):
-        ''' add book into the Library'''
-        new_book = {'id' : 5, 'title' : title, 'note' : 'very fun'}
-        books_db.append(new_book)
-        return {'message' : 'new book added'}, 201
 
-@bk.route('/search_by_title/<string:title>')
-class Search_by_title(Resource):
-    '''Get a book by book title'''
-    @bk.doc(params={'title' : 'a book title'})
-    @bk.response(200, 'success')
-    @bk.response(404, 'book not found')
+@bk.route('/update-book/<string:id>/update?authorId=<string:authorId>&date=<string:date>&title=<string:title>d&note=<string:note>')
+class update_by_id(Resource):
+    '''update a book by book id'''
+    @bk.doc(params={'id' : 'a book id', 'authorId' : 'book author id', 'title' : 'book title', 'note' : 'book note', 'date' : 'book release date'})
+    @bk.response(200, 'Book successfully updated')
+    @bk.response(400, 'Bad request, invalid syntax')
+    @bk.response(401, 'Unauthorized')
+    @bk.response(403, 'Can not update the book')
+    def post(self, title):
+        return harry_potter, 200
+
+
+@bk.route('/search-by-author/search?authorId=<string:authorId>')
+class serch_by_author_id(Resource):
+    '''get books by author id'''
+    @bk.doc(params={'authorId' : 'Author ID'})
+    @bk.response(200, 'Success')
+    @bk.response(400, 'Bad request, invalid syntax')
+    @bk.response(403, 'Can not search by the given author id')
+    @api.marshal_with(book_model, as_list=True)
     def get(self, title):
-        return harry_potter, 200
+        return query_list, 200
+
+
+@bk.route('/search-by-date-range/search?startDate=<string:startDate>&endDate=<string:endDate>')
+class search_by_date_range(Resource):
+    '''get books by start date and end date'''
+    @bk.doc(params={'startDate' : 'Start date of the search range', "endDate" : "End date of the search range"})
+    @bk.response(200, 'Success')
+    @bk.response(400, 'Bad request, invalid syntax')
+    @bk.response(403, 'Can not search by the given author id')
+    @api.marshal_with(book_model, as_list=True)
+    def get(self, title):
+        return query_list, 200
+
 
 if __name__ == '__main__':
     app.run(debug=True)
