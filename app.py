@@ -210,8 +210,6 @@ class LoanRecord(Resource):
         '''get the loan record'''
         return one_loan_record, 200
 
-
-
 @loanrec.route('/create_loan_record/<int:bookId>/<int:loanerId>/<int:loanDate>')
 class create_loan_record(Resource):
     '''Create a loan record by information'''
@@ -224,7 +222,6 @@ class create_loan_record(Resource):
     @loanrec.response(400, 'creation of loan record failed')
     def put(self, bookId, loanerId, loanDate):
         return one_loan_record, 200
-
 
 @loanrec.route('/check_book_availability/<int:bookId>/<int:loanDate>/<int:returnDate>')
 class remind_loaner(Resource):
@@ -246,7 +243,23 @@ class remind_loaner(Resource):
     def get(self, recordNumber):
         return one_loan_record, 200
 
-# Maybe we should merge operations of book note into update_book_note
+@bk.route('/add_book_note/<string:note>')
+class add_book_note(Resource):
+    '''add note for a book'''
+    @bk.doc(params={'note': 'note for a book'})
+    @bk.response(200, 'success')
+    @bk.response(404, 'failed to add book note')
+    def post(self, note):
+        return harry_potter, 200
+
+@bk.route('/remove_book_note/')
+class remove_book_note(Resource):
+    '''remove note for a book'''
+    @bk.response(200, 'success')
+    @bk.response(404, 'failed to remove book note')
+    def delete(self):
+        return harry_potter, 200
+
 @bk.route('/update_book_note/<string:note>')
 class update_book_note(Resource):
     '''update note for a book'''
