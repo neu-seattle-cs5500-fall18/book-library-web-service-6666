@@ -81,7 +81,7 @@ class Remove_by_id(Resource):
         return {'message' : 'book {} has been removed.'}.format(id), 200
 
 
-@bk.route('/update-book/<int:bookId>/update?authorId=<string:authorId> \
+@bk.route('/update-book/<int:bookId>/update?authorId=<string:authorId>\
 &title=<string:title>&note=<string:note>&date=<string:date>')
 class Update_by_id(Resource):
 
@@ -285,6 +285,8 @@ class LoanRecord(Resource):
         '''Get the loan record'''
         return one_loan_record, 200
 
+
+
 @loanrec.route('/create_loan_record/<int:bookId>/<int:loanerId>/<int:loanDate>')
 class Create_loan_record(Resource):
     '''Create a loan record by information'''
@@ -296,9 +298,8 @@ class Create_loan_record(Resource):
     @loanrec.response(200, 'success')
     @loanrec.response(400, 'creation of loan record failed')
     def put(self, book_id, loaner_id, loan_date):
-        '''create a new loan record'''
+        '''Create a new loan record'''
         return one_loan_record, 200
-
 
 
 # @loanrec.route('/check_book_availability/<int:bookId>/<int:loanDate>/<int:returnDate>')
@@ -312,18 +313,6 @@ class Create_loan_record(Resource):
 #     def get(self, book_id, loan_date, return_date):
 #         return one_loan_record, 200
 
-@loanrec.route('/check_book_availability/<int:bookId>/<int:loanDate>/<int:returnDate>')
-class remind_loaner(Resource):
-    '''Check book availability'''
-    @loanrec.doc(params={'bookId': 'the Id of the loaned book'})
-    @loanrec.doc(params={'loanDate': 'the loan date of the book'})
-    @loanrec.doc(params={'returnDate': 'the return date of the book'})
-    @loanrec.response(200, 'success')
-    @loanrec.response(400, 'checking book availability failed')
-    def get(self, bookId, loanDate, returnDate):
-        return one_loan_record, 200
-
-
 @loanrec.route('/remind_loaner/<int:recordId>')
 class Remind_loaner(Resource):
     '''Remind loaner of return'''
@@ -335,34 +324,6 @@ class Remind_loaner(Resource):
         return one_loan_record, 200
 
 
-
-
-
-@bk.route('/add_book_note/<string:note>')
-class add_book_note(Resource):
-    '''add note for a book'''
-    @bk.doc(params={'note': 'note for a book'})
-    @bk.response(200, 'success')
-    @bk.response(404, 'failed to add book note')
-    def post(self, note):
-        return harry_potter, 200
-
-@bk.route('/remove_book_note/')
-class remove_book_note(Resource):
-    '''remove note for a book'''
-    @bk.response(200, 'success')
-    @bk.response(404, 'failed to remove book note')
-    def delete(self):
-        return harry_potter, 200
-
-@bk.route('/update_book_note/<string:note>')
-class update_book_note(Resource):
-    '''update note for a book'''
-    @bk.doc(params={'note' : 'note for a book'})
-    @bk.response(200, 'success')
-    @bk.response(404, 'failed to update book note')
-    def put(self, note):
-        return harry_potter, 200
 
 
 @loanrec.route('/get_all_loan_records')
