@@ -299,7 +299,7 @@ class Create_loan_record(Resource):
         '''create a new loan record'''
         return one_loan_record, 200
 
-<<<<<<< HEAD
+
 
 # @loanrec.route('/check_book_availability/<int:bookId>/<int:loanDate>/<int:returnDate>')
 # class check_book_availability(Resource):
@@ -311,7 +311,7 @@ class Create_loan_record(Resource):
 #     @loanrec.response(400, 'checking book availability failed')
 #     def get(self, book_id, loan_date, return_date):
 #         return one_loan_record, 200
-=======
+
 @loanrec.route('/check_book_availability/<int:bookId>/<int:loanDate>/<int:returnDate>')
 class remind_loaner(Resource):
     '''Check book availability'''
@@ -322,7 +322,7 @@ class remind_loaner(Resource):
     @loanrec.response(400, 'checking book availability failed')
     def get(self, bookId, loanDate, returnDate):
         return one_loan_record, 200
->>>>>>> cb15721698a5fdcda90d74fc6176f4afeec48eee
+
 
 @loanrec.route('/remind_loaner/<int:recordId>')
 class Remind_loaner(Resource):
@@ -334,10 +334,10 @@ class Remind_loaner(Resource):
         '''Send a message to loaner about returning book'''
         return one_loan_record, 200
 
-<<<<<<< HEAD
 
 
-=======
+
+
 @bk.route('/add_book_note/<string:note>')
 class add_book_note(Resource):
     '''add note for a book'''
@@ -363,7 +363,7 @@ class update_book_note(Resource):
     @bk.response(404, 'failed to update book note')
     def put(self, note):
         return harry_potter, 200
->>>>>>> cb15721698a5fdcda90d74fc6176f4afeec48eee
+
 
 @loanrec.route('/get_all_loan_records')
 class Get_all_loan_records(Resource):
