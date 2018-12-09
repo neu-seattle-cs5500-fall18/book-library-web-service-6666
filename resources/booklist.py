@@ -38,7 +38,7 @@ class CreateBookList(Resource):
     @bklst.response(200, 'Success')
     @bklst.response(400, 'Bad request, invalid syntax')
 
-    def put(self, name):
+    def post(self, name):
         ''' Add a booklist'''
         new_book_list = BookListModel.create_a_list(name)
         return new_book_list.json(), 200

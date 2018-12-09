@@ -26,7 +26,7 @@ class AddANewBook(Resource):
     @bk.response(201, 'Book successful added')
     @bk.response(400, 'Bad request, invalid syntax')
     @bk.response(403, 'Can not add the book')
-    def put(self, title, author, date, genre):
+    def post(self, title, author, date, genre):
         '''Add a new book'''
         cur_author = AuthorModel.search_and_add_author(author)
 
@@ -68,7 +68,7 @@ class UpdateById(Resource):
     @bk.response(200, 'Book successfully updated')
     @bk.response(400, 'Bad request, invalid syntax')
     @bk.response(404, 'Book not found')
-    def post(self, book_id, author, title, date, genre):
+    def put(self, book_id, author, title, date, genre):
         '''Update a book by book id'''
         cur_book = BookModel.find_by_id(book_id)
 

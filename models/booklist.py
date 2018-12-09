@@ -20,6 +20,7 @@ class ListBookAssociation(db.Model):
         self.list_id = list_id
         self.book_id = book_id
 
+
     def json(self):
         return {
             'book id' : self.book_id,
