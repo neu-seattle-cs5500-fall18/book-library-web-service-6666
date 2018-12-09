@@ -3,10 +3,10 @@ from models.booklist import BookListModel, ListBookAssociation
 from models.book import BookModel
 
 
-bklst = Namespace('BookList', description='BookList operations')
+bklst = Namespace('booklist', description='booklist operations')
 
 
-booklist_model = bklst.model('BookList', {
+booklist_model = bklst.model('booklist', {
    'id': fields.Integer(readOnly=True, description='The booklist id'),
    'name': fields.String(required=True, description='The booklist name'),
    'note': fields.String(description='Description of the booklist')
