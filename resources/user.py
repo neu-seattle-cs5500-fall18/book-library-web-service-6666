@@ -13,7 +13,7 @@ class AddUser(Resource):
     @ur.doc(params={'user_name' : 'the user name', 'email' : 'the email of the user'})
     @ur.response(200, 'Success')
     @ur.response(400, 'Bad request, invalid syntax')
-    def put(self, user_name, email):
+    def post(self, user_name, email):
         '''Add a note to a certain book'''
         user = UserModel.create_new_user(user_name, email)
         return user.json(), 200

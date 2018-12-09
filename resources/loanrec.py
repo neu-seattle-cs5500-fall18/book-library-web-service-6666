@@ -51,7 +51,7 @@ class LoanBook(Resource):
     @loanrec.doc(params={'loan_date': 'the loan date of the book', 'due_date' : 'return due date'})
     @loanrec.response(200, 'success')
     @loanrec.response(400, 'creation of loan record failed')
-    def put(self, book_id, user_id, loan_date, due_date):
+    def post(self, book_id, user_id, loan_date, due_date):
         '''Create a new loan record'''
         loan_day = DateRead.read_date(loan_date)
         due_day = DateRead.read_date(due_date)

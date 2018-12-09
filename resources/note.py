@@ -13,7 +13,7 @@ class AddNote(Resource):
     @nt.doc(params={'book_id' : 'a book id', 'content' : 'the content of the note'})
     @nt.response(200, 'Success')
     @nt.response(400, 'Bad request, invalid syntax')
-    def put(self, book_id, content):
+    def post(self, book_id, content):
         '''Add a note to a certain book'''
         try:
             note = NoteModel.create_note_for_book(book_id, content)
@@ -44,7 +44,7 @@ class RemoveNote(Resource):
     @nt.doc(params={'note_id': 'a note id'})
     @nt.response(200, 'Success')
     @nt.response(400, 'Bad request, invalid syntax')
-    def get(self, note_id):
+    def delete(self, note_id):
         '''Remove a note for a certain book'''
         note = NoteModel.find_by_id(note_id)
         if not note:
@@ -59,8 +59,8 @@ class UpdateNote(Resource):
     @nt.doc(params={'note_id': 'a note id'})
     @nt.response(200, 'Success')
     @nt.response(400, 'Bad request, invalid syntax')
-    def get(self, note_id, new_content):
-        '''Remove a note for a certain book'''
+    def put(self, note_id, new_content):
+        '''Update a note for a certain book'''
         try:
             note = NoteModel.update_note(note_id, new_content)
         except Exception as e:

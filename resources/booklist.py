@@ -3,10 +3,10 @@ from models.booklist import BookListModel, ListBookAssociation
 from models.book import BookModel
 
 
-bklst = Namespace('BookList', description='BookList operations')
+bklst = Namespace('booklist', description='booklist operations')
 
 
-booklist_model = bklst.model('BookList', {
+booklist_model = bklst.model('booklist', {
    'id': fields.Integer(readOnly=True, description='The booklist id'),
    'name': fields.String(required=True, description='The booklist name'),
    'note': fields.String(description='Description of the booklist')
@@ -38,7 +38,7 @@ class CreateBookList(Resource):
     @bklst.response(200, 'Success')
     @bklst.response(400, 'Bad request, invalid syntax')
 
-    def put(self, name):
+    def post(self, name):
         ''' Add a booklist'''
         new_book_list = BookListModel.create_a_list(name)
         return new_book_list.json(), 200
