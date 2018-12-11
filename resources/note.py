@@ -10,7 +10,7 @@ nt = Namespace('note', description='Book Note operations')
 class AddNote(Resource):
 
     @nt.doc(params={'book_id' : 'a book id', 'content' : 'the content of the note'})
-    @nt.response(200, 'Success')
+    @nt.response(201, 'Success')
     @nt.response(400, 'Bad request, invalid syntax')
     def post(self, book_id, content):
         '''Add a note to a certain book'''
@@ -18,7 +18,7 @@ class AddNote(Resource):
             note = NoteModel.create_note_for_book(book_id, content)
         except Exception as e:
             return {'message': 'no book found in this id'}, 404
-        return note.json(), 200
+        return note.json(), 201
 
 
 

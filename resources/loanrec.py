@@ -31,7 +31,7 @@ class LoanBook(Resource):
     @loanrec.doc(params={'book_id' : 'the Id of the loaned book'})
     @loanrec.doc(params={'user_id': 'the id of the loaner'})
     @loanrec.doc(params={'loan_date': 'the loan date of the book', 'due_date' : 'return due date'})
-    @loanrec.response(200, 'success')
+    @loanrec.response(201, 'success')
     @loanrec.response(400, 'creation of loan record failed')
     def post(self, book_id, user_id, loan_date, due_date):
         '''Create a new loan record'''
@@ -39,13 +39,13 @@ class LoanBook(Resource):
         due_day = DateRead.read_date(due_date)
         try:
             book = BookModel.find_by_id(book_id)
-            loanrec = LoanRecordModel.create_loan_record(book_id, user_id, loan_day, due_day)
         except Exception as e:
             return {'message' : 'loan book error, book or user not found'}, 400
         if not BookModel.check_availability(book):
             return {'message' : 'book {} has been loaned out'.format(book_id)}, 400
+        loanrec = LoanRecordModel.create_loan_record(book_id, user_id, loan_day, due_day)
         BookModel.mark_loaned_out(book)
-        return loanrec.json(), 200
+        return loanrec.json(), 201
 
 @loanrec.route('/return_book/<int:rec_id>/<string:return_date>')
 class ReturnBook(Resource):

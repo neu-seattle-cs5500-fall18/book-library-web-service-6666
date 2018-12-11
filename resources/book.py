@@ -81,7 +81,7 @@ class GetAllBooks(Resource):
 
 
 @bk.route('/search-by-author/<string:author_name>')
-class SearchByAuthorId(Resource):
+class SearchByAuthorName(Resource):
 
     @bk.doc(params={'author_name' : 'Author name'})
     @bk.response(200, 'Success')
@@ -91,11 +91,11 @@ class SearchByAuthorId(Resource):
         '''Get books by author id'''
         author = AuthorModel.find_by_name(author_name)
         if not author:
-            return {'message': 'no record for this author'}, 404
+            return [], 404
         try:
             books = AuthorModel.get_all_books_from_author(author.id)
         except Exception as e:
-            return {'message': 'no record for this author id'}, 404
+            return [], 404
         book_list = [book.json() for book in books]
 
         return book_list, 200
@@ -134,7 +134,7 @@ class SearchByTitle(Resource):
         try:
             books = BookModel.find_by_name(title)
         except Exception as e:
-            return {'message': 'no such title found'}, 404
+            return [], 404
         book_list = [book.json() for book in books]
         return book_list, 200
 
@@ -152,10 +152,26 @@ class SearchByGenre(Resource):
         try:
             books = GenreModel.get_all_books_from_genre(genre)
         except Exception as e:
-            return {'message': 'no record for this genre'}, 404
+            return [], 404
         book_list = [book.json() for book in books]
 
         return book_list, 200
+
+
+@bk.route('/advanced_search/<string:author>/<string:genre>/<string:start_date>/<string:end_date>')
+class AdvancedSearch(Resource):
+    @bk.doc(params={'author' : 'author name', 'genre' : 'genre or subject of a book',\
+                    'start_date' : 'start date range', 'end_date' : 'end date range'})
+    @bk.response(200, 'Success')
+    @bk.response(400, 'Bad request, invalid syntax')
+    def get(self, author, genre, start_date, end_date):
+        '''Search books by multiple requirements'''
+        search_by_author_res = SearchByAuthorName().get(author)[0]
+        search_by_genre_res = SearchByGenre().get(genre)[0]
+        search_by_date_res = SearchByDateRange().get(start_date, end_date)[0]
+        temp = [book for book in search_by_date_res if book in search_by_genre_res]
+        res = [book for book in temp if book in search_by_author_res]
+        return res, 200
 
 
 
