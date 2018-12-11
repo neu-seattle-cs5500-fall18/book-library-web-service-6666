@@ -23,6 +23,3 @@ From team6666'''.format(user_name, book_name, return_date)
             return True
         except:
             return False
-
-
-# send_email(EMAIL_ADDRESS, "tao", "harray potter", "01/20/2019")

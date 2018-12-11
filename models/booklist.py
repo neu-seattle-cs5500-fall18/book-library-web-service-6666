@@ -1,11 +1,6 @@
 from db import db
 from .exceptions import AuthorNotFoundException
 
-# book_list_table = db.Table('book_lists',
-#                            db.Column('book_id', db.Integer, db.ForeignKey('books.id'), primary_key=True),
-#                            db.Column('book_list_id', db.Integer, db.ForeignKey('BookLists.id'), primary_key=True))
-
-
 class ListBookAssociation(db.Model):
     __tablename__ = 'list_book_table'
     book_id = db.Column(db.Integer, db.ForeignKey('books.id'), primary_key=True)
@@ -71,7 +66,6 @@ class BookListModel(db.Model):
         }
 
     def add_new_book(self, book_id):
-        # self.book_ids.remove(book_id)
         db.session.add(book_id)
         db.session.commit()
 

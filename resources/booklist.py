@@ -6,31 +6,6 @@ from models.book import BookModel
 bklst = Namespace('booklist', description='booklist operations')
 
 
-booklist_model = bklst.model('booklist', {
-   'id': fields.Integer(readOnly=True, description='The booklist id'),
-   'name': fields.String(required=True, description='The booklist name'),
-   'note': fields.String(description='Description of the booklist')
-   })
-
-
-booklists_db = []
-first_booklist = {'bookId' : 1, 'name' : 'First Booklist', 'note' : 'first booklist'}
-booklists_db.append(first_booklist)
-
-
-# @bklst.route('/')
-# class BookList(Resource):
-    # '''Get a book list by book list id'''
-    # @bklst.doc(params={'book_list_id' : 'a book list id'})
-    # @bklst.response(200, 'Success')
-    # @bklst.response(400, 'Bad request, invalid syntax')
-    # @bklst.response(404, 'Book list not found')
-    # def get(self, book_list_id):
-    #     '''Get the booklist by the booklist id'''
-    #     return first_booklist, 200
-
-
-
 
 @bklst.route('/<string:name>')
 class CreateBookList(Resource):
@@ -111,16 +86,3 @@ class AddBookToABookList(Resource):
         ListBookAssociation.delete_from_db(assoc)
         return book_list.json(), 200
 
-
-# @bklst.route('/remove_book_to_a_book_list/<int:listId>/<int:bookId>')
-# class RemoveBookToABookList(Resource):
-#     '''Remove a given book into a booklist'''
-#     @bklst.doc(params={'listId': 'the id of the booklist'})
-#     @bklst.doc(params={'bookId' : 'the id of the book to be removed'})
-#     @bklst.response(200, 'Success')
-#     @bklst.response(400, 'Bad request, invalid syntax')
-#     @bklst.response(404, 'Target book or book list not founded')
-#     def delete(self, list_id, book_id):
-#         '''Remove book from a certain booklist'''
-#         return {'message' : 'book {} has been removed to booklist {}'}.\
-#         format(book_id, list_id), 200

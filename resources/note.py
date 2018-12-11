@@ -1,5 +1,4 @@
-from flask_restplus import Resource, fields, Namespace
-from models.book import  BookModel
+from flask_restplus import Resource, Namespace
 from models.note import NoteModel
 
 

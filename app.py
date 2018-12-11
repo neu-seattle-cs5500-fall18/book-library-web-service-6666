@@ -1,5 +1,4 @@
 from flask import Flask
-from flask_restplus import Api, Resource, fields
 
 from resources import blueprint as api
 from db import db

@@ -75,16 +75,6 @@ class LoanRecordModel(db.Model):
         return record
 
 
-    # @classmethod
-    # def create_an_association(cls, list_id, book_id):
-    #     book_list_asso = ListBookAssociation.find_by_id(list_id, book_id)
-    #     if not book_list_asso:
-    #         book_list_asso = ListBookAssociation(list_id, book_id)
-    #         book_list_asso.save_to_db()
-    #     return book_list_asso
-
-
-
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()

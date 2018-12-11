@@ -40,21 +40,6 @@ class UserModel(db.Model):
         new_user.save_to_db()
         return new_user
 
-    # @classmethod
-    # def search_and_add_genre(cls, name):
-    #     cur_genre = GenreModel.find_by_name(name)
-    #     if not cur_genre:
-    #         cur_genre = GenreModel(name)
-    #         cur_genre.save_to_db()
-    #     return cur_genre
-    #
-    # @classmethod
-    # def get_all_books_from_genre(cls, name):
-    #     genre =  cls.query.filter_by(name=name).one()
-    #     if not genre:
-    #         raise Exception("no author match this id.")
-    #     return genre.books
-
 
     def save_to_db(self):
         db.session.add(self)

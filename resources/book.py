@@ -1,22 +1,11 @@
-from flask_restplus import Resource, fields, Namespace
+from flask_restplus import Resource, Namespace
 from models.book import BookModel
 from models.author import AuthorModel
 from models.genre import GenreModel
-from models.note import NoteModel
 
 from datetime import datetime
 
 bk = Namespace('book', description='Book Library operations')
-
-
-# book_model = bk.model('Book', {
-#     'id': fields.Integer(readOnly=True, description='The book id'),
-#     'title': fields.String(required=True, description='The book title'),
-#     'note': fields.String(description='Note of the book'),
-#     'authorId': fields.Integer(required=True, description='The author id of the bookd'),
-#     'date' : fields.String(description='Date of book release'),
-#     'genre': fields.String(description='Genre of the book')
-# })
 
 
 @bk.route('/add-book/<string:title>/<string:author>/<string:date>/<string:genre>')
@@ -78,11 +67,7 @@ class UpdateById(Resource):
         new_author = AuthorModel.search_and_add_author(author)
         new_genre = GenreModel.search_and_add_genre(genre)
         new_date = DateRead.read_date(date)
-        # cur_book.author_id = new_author.id
-        # cur_book.name = title
-        # cur_book.release_date = date
-        # cur_book.genre = new_genre
-        # BookModel.save_to_db(cur_book)
+
         cur_book = BookModel.update_book(book_id, title, new_author, new_date, new_genre)
         return cur_book.json(), 200
 
@@ -129,22 +114,11 @@ class SearchByDateRange(Resource):
         '''Get books by start date and end date'''
         start = DateRead.read_date(start_date)
         end = DateRead.read_date(end_date)
-        # try:
-        #     books = BookModel.find_by_date_range(start, end)
-        # except Exception as e:
-        #     return {'message': 'range search error'}, 404
+
         books = BookModel.find_by_date_range(start, end)
         book_list = [book.json() for book in books]
         return book_list, 200
 
-    # @bk.doc(params={'title' : 'the book object'},
-    # response={201, 'create success', 400, 'Error'})
-    # @bk.marshal_with(book_model)
-    # def put(self):
-    #     ''' add book into the Library'''
-    #     new_book = {'id' : 5, 'title' : title, 'note' : 'very fun'}
-    #     books_db.append(new_book)
-    #     return {'message' : 'new book added'}, 201
 
 
 
@@ -183,52 +157,6 @@ class SearchByGenre(Resource):
 
         return book_list, 200
 
-
-# @bk.route('/advanced_search/<string:search_options>')
-# class Advanced_search(Resource):
-#
-#     @bk.doc(params={'search_options' : 'multiple search options'})
-#     @bk.response(200, 'Success')
-#     @bk.response(400, 'Bad request, invalid syntax')
-#     @bk.response(404, 'Book not found')
-#     def get(self, search_options):
-#         '''Search books by given options'''
-#         return harry_potter, 200
-#
-#
-#
-#
-#
-#
-#
-# @bk.route('/update-book-note/<int:bookId>')
-# class Book_note(Resource):
-#     '''the note of a given book'''
-#     @bk.doc(params={'bookId' : 'a book id'})
-#     @bk.response(200, 'Success')
-#     @bk.response(400, 'Bad request, invalid syntax')
-#     @bk.response(404, 'No book found')
-#     def get(self, bookId):
-#         '''Get the note of a book'''
-#         return {'message' : 'book note found'}, 200
-#
-#     @bk.doc(params={'bookId' : 'a book id', 'note' : 'note for a book'})
-#     @bk.response(200, 'Success')
-#     @bk.response(400, 'Bad request, invalid syntax')
-#     @bk.response(404, 'No book found')
-#     def put(self, bookId, note):
-#         '''Update a book note'''
-#         return {'message' : 'book {} has been updated.'}.format(id), 200
-#
-#
-#
-#     @bk.doc(params={'bookId' : 'a book id'})
-#     @bk.response(200, 'Success')
-#     @bk.response(400, 'Bad request, invalid syntax')
-#     @bk.response(404, 'No book found')
-#     def delete(self, bookId, note):
-#         '''Delete the note for a book'''
-#         return {'message' : 'the note of book {} has been deleted.'}.format(id), 200
 
 
 class DateRead:
