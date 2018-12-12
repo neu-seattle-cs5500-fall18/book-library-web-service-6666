@@ -1,6 +1,7 @@
 from db import db
 from .exceptions import AuthorNotFoundException
 
+
 class ListBookAssociation(db.Model):
     __tablename__ = 'list_book_table'
     book_id = db.Column(db.Integer, db.ForeignKey('books.id'), primary_key=True)
@@ -11,21 +12,20 @@ class ListBookAssociation(db.Model):
                                                                cascade="save-update, merge, delete, delete-orphan"))
 
     def __init__(self, list_id, book_id):
-
         self.list_id = list_id
         self.book_id = book_id
 
-
     def json(self):
         return {
-            'book id' : self.book_id,
-            'list id' : self.list_id
+            'book id': self.book_id,
+            'list id': self.list_id
         }
 
     @classmethod
     def find_by_id(cls, list_id, book_id):
         return cls.query.filter_by(list_id=list_id, book_id=book_id).first()
 
+    # add a book to the booklist by creating association between them
     @classmethod
     def create_an_association(cls, list_id, book_id):
         book_list_asso = ListBookAssociation.find_by_id(list_id, book_id)
@@ -33,7 +33,6 @@ class ListBookAssociation(db.Model):
             book_list_asso = ListBookAssociation(list_id, book_id)
             book_list_asso.save_to_db()
         return book_list_asso
-
 
     def save_to_db(self):
         db.session.add(self)
@@ -44,8 +43,7 @@ class ListBookAssociation(db.Model):
         db.session.commit()
 
 
-
-
+# represents the booklist class
 class BookListModel(db.Model):
     __tablename__ = 'BookLists'
 
@@ -69,10 +67,12 @@ class BookListModel(db.Model):
         db.session.add(book_id)
         db.session.commit()
 
+    # find a booklist by its name
     @classmethod
     def find_by_name(cls, name):
         return cls.query.filter_by(name=name).first()
 
+    # find a booklist by its ID
     @classmethod
     def find_by_id(cls, id):
         return cls.query.filter_by(id=id).first()
@@ -81,6 +81,7 @@ class BookListModel(db.Model):
     def find_all(cls):
         return cls.query.all()
 
+    # create a new booklist
     @classmethod
     def create_a_list(cls, name):
         book_list = BookListModel.find_by_name(name)
@@ -89,13 +90,13 @@ class BookListModel(db.Model):
             book_list.save_to_db()
         return book_list
 
+    # get all the books from a given list
     @classmethod
     def get_all_books_from_list(cls, book_list_id):
         book_list = cls.query.filter_by(id=book_list_id).one()
         if not book_list:
             raise AuthorNotFoundException("no author match this id.")
         return book_list.books
-
 
     def save_to_db(self):
         db.session.add(self)

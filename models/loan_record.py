@@ -5,6 +5,7 @@ from models.user import UserModel
 
 from .exceptions import BookNotFoundException, UserNotFoundException, RecordNotFoundException
 
+# represents the loan record class
 class LoanRecordModel(db.Model):
     __tablename__ = 'loan_record_table'
     id = db.Column(db.Integer, primary_key=True)
@@ -16,9 +17,9 @@ class LoanRecordModel(db.Model):
     returned_on_time = db.Column(db.Boolean, default=False)
 
     book = db.relationship("BookModel", backref=db.backref("book",
-                                                               cascade="save-update, merge, delete, delete-orphan"))
+                                                           cascade="save-update, merge, delete, delete-orphan"))
     loaner = db.relationship('UserModel', backref=db.backref("user",
-                                                               cascade="save-update, merge, delete, delete-orphan"))
+                                                             cascade="save-update, merge, delete, delete-orphan"))
 
     def __init__(self, book_id, user_id, loan_date, due_date):
 
@@ -29,14 +30,15 @@ class LoanRecordModel(db.Model):
 
     def json(self):
         return {
-            'loan record id' : self.id,
-            'book id' : self.book_id,
-            'user id' : self.user_id,
-            'loan date' : self.loan_date.strftime('%m/%d/%Y'),
-            'due date' : self.due_date.strftime('%m/%d/%Y'),
-            'returned on time' : self.returned_on_time
+            'loan record id': self.id,
+            'book id': self.book_id,
+            'user id': self.user_id,
+            'loan date': self.loan_date.strftime('%m/%d/%Y'),
+            'due date': self.due_date.strftime('%m/%d/%Y'),
+            'returned on time': self.returned_on_time
         }
 
+    # find a loan record by its ID
     @classmethod
     def find_by_id(cls, rec_id):
         return cls.query.filter_by(id=rec_id).first()
@@ -45,13 +47,12 @@ class LoanRecordModel(db.Model):
     def find_all(cls):
         return cls.query.all()
 
+    # find a loan record by the book ID
     @classmethod
     def find_by_book_id(cls, book_id):
         return cls.query.filter_by(book_id=book_id)
 
-
-
-
+    # create a new loan record with given book ID, user ID, loan date and due date
     @classmethod
     def create_loan_record(cls, book_id, user_id, loan_date, due_date):
         book = BookModel.find_by_id(book_id)
@@ -64,6 +65,7 @@ class LoanRecordModel(db.Model):
         new_record.save_to_db()
         return new_record
 
+    # complete a loan record with given return date
     @classmethod
     def complete_loan_record(cls, rec_id, return_day):
         record = LoanRecordModel.find_by_id(rec_id)
@@ -73,7 +75,6 @@ class LoanRecordModel(db.Model):
         record.returned_on_time = return_day < cls.due_date
         record.save_to_db()
         return record
-
 
     def save_to_db(self):
         db.session.add(self)

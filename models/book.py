@@ -2,7 +2,7 @@ from db import db
 
 from .exceptions import BookNotFoundException
 
-
+# represents the book class
 class BookModel(db.Model):
     __tablename__ = 'books'
 
@@ -21,7 +21,6 @@ class BookModel(db.Model):
 
     notes = db.relationship('NoteModel', lazy='dynamic')
 
-
     def __init__(self, name, author_id, date, genre):
         self.name = name
         self.author_id = author_id
@@ -38,10 +37,12 @@ class BookModel(db.Model):
             'is loaned out': self.is_loaned_out
         }
 
+    # find a book by given ID
     @classmethod
     def find_by_id(cls, id):
         return cls.query.filter_by(id=id).first()
 
+    # find a book by given name
     @classmethod
     def find_by_name(cls, name):
         return cls.query.filter_by(name=name)
@@ -50,6 +51,7 @@ class BookModel(db.Model):
     def find_all(cls):
         return cls.query.all()
 
+    # update a book
     @classmethod
     def update_book(cls, book_id, name, author, date, genre):
         book = BookModel.find_by_id(book_id)
@@ -64,26 +66,24 @@ class BookModel(db.Model):
         book.save_to_db()
         return book
 
+    # find a book in given date range
     @classmethod
     def find_by_date_range(cls, start_date, end_date):
-
         return cls.query.filter(cls.release_date >= start_date, cls.release_date <= end_date).all()
 
-
-
-
+    # mark a book as loaned out
     def mark_loaned_out(self):
         self.is_loaned_out = True
         self.save_to_db()
 
+    # mark a book as returned
     def mark_returned(self):
         self.is_loaned_out = False
         self.save_to_db()
 
+    # check if a book is available for loaning
     def check_availability(self):
         return not self.is_loaned_out
-
-
 
     def save_to_db(self):
         db.session.add(self)

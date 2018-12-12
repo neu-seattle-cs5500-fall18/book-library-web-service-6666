@@ -2,6 +2,8 @@ from db import db
 
 from .exceptions import AuthorNotFoundException
 
+
+# represents the author class
 class AuthorModel(db.Model):
     __tablename__ = 'authors'
 
@@ -21,6 +23,7 @@ class AuthorModel(db.Model):
             'books': [book.json() for book in self.books.all()]
         }
 
+    # find an author by name
     @classmethod
     def find_by_name(cls, name):
         return cls.query.filter_by(name=name).first()
@@ -29,6 +32,7 @@ class AuthorModel(db.Model):
     def find_all(cls):
         return cls.query.all()
 
+    # search for a specific author and return him/her. If not exist in the database, add him/her to the database
     @classmethod
     def search_and_add_author(cls, name):
         cur_author = AuthorModel.find_by_name(name)
@@ -37,13 +41,13 @@ class AuthorModel(db.Model):
             cur_author.save_to_db()
         return cur_author
 
+    # retrieve all the books written by the author
     @classmethod
     def get_all_books_from_author(cls, author_id):
-        author =  cls.query.filter_by(id=author_id).one()
+        author = cls.query.filter_by(id=author_id).one()
         if not author:
             raise AuthorNotFoundException("no author match this id.")
         return author.books
-
 
     def save_to_db(self):
         db.session.add(self)

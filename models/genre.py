@@ -2,6 +2,8 @@ from db import db
 
 from .exceptions import GenreNotFoundException
 
+
+# represents the book genre class
 class GenreModel(db.Model):
     __tablename__ = 'genres'
 
@@ -20,6 +22,7 @@ class GenreModel(db.Model):
             'books': [book.json() for book in self.books.all()]
         }
 
+    # find a genre by its name
     @classmethod
     def find_by_name(cls, name):
         return cls.query.filter_by(name=name).first()
@@ -28,6 +31,7 @@ class GenreModel(db.Model):
     def find_all(cls):
         return cls.query.all()
 
+    # search for a given genre and return it. If not exist, create the genre and return it
     @classmethod
     def search_and_add_genre(cls, name):
         cur_genre = GenreModel.find_by_name(name)
@@ -36,13 +40,13 @@ class GenreModel(db.Model):
             cur_genre.save_to_db()
         return cur_genre
 
+    # get all the books of a given genre
     @classmethod
     def get_all_books_from_genre(cls, name):
-        genre =  cls.query.filter_by(name=name).one()
+        genre = cls.query.filter_by(name=name).one()
         if not genre:
             raise GenreNotFoundException("no genre match this id.")
         return genre.books
-
 
     def save_to_db(self):
         db.session.add(self)

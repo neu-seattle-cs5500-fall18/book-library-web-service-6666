@@ -3,6 +3,8 @@ from db import db
 from .book import BookModel
 from .exceptions import BookNotFoundException, NoteNotFoundException
 
+
+# represents the book note class
 class NoteModel(db.Model):
     __tablename__ = 'notes'
 
@@ -23,6 +25,7 @@ class NoteModel(db.Model):
             'note content': self.content
         }
 
+    # find a note by its ID
     @classmethod
     def find_by_id(cls, note_id):
         return cls.query.filter_by(id=note_id).first()
@@ -31,6 +34,7 @@ class NoteModel(db.Model):
     def find_all(cls):
         return cls.query.all()
 
+    # get all notes of a book
     @classmethod
     def get_all_notes_for_book(cls, book_id):
         book = BookModel.find_by_id(book_id)
@@ -38,6 +42,7 @@ class NoteModel(db.Model):
             raise BookNotFoundException("no book match this id.")
         return book.notes
 
+    # create a note for a book
     @classmethod
     def create_note_for_book(cls, book_id, content):
         book = BookModel.find_by_id(book_id)
@@ -47,6 +52,7 @@ class NoteModel(db.Model):
         note.save_to_db()
         return note
 
+    # update an existing note
     @classmethod
     def update_note(cls, note_id, content):
         note = NoteModel.find_by_id(note_id)
